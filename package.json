@@ -1,0 +1,9 @@
+{
+"scripts": {
+    "deploy": "cd backend/src && node app.js && cd .. && cd../frontend && npm i && npm run build",
+    "refresh": "cd backend && npm i && cd ../frontend && npm i",
+    "server": "cd backend && node src/app.js",
+    "dev": "cd frontend && npm run dev",
+    "client": "cd frontend && vite build"
+    }
+}

@@ -1,4 +1,3 @@
-// /frontend/src/components/Upload.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -10,7 +9,7 @@ function Upload() {
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
-        setResponse(null);
+        setResponse(null); 
         setStatus('');
         setError(null);
     };
@@ -23,9 +22,15 @@ function Upload() {
         setStatus('Uploading...');
 
         try {
-            const res = await axios.post('/api/audio/analyze', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-            setStatus('Analysis Complete');
-            setResponse(res.data);
+            const res = await axios.post('/api/audio/analyze', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            // Assuming the response contains the analysis result
+            setResponse(res.data);  // Update response with the analysis data
+
+            setStatus('File uploaded and analyzed successfully!');
+
         } catch (err) {
             setError(err.response?.data?.error || 'Error uploading file');
             setStatus('');
@@ -49,6 +54,8 @@ function Upload() {
 }
 
 function TrackList({ tracks }) {
+    if (!tracks || tracks.length === 0) return <p>No tracks found.</p>;
+
     return (
         <ul>
             {tracks.map((track, index) => (

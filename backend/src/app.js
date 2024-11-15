@@ -3,6 +3,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import audioRoutes from './routes/audioRoutes.js';
 import { Server } from 'socket.io';
 import winston from 'winston';
@@ -23,6 +24,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/audio', audioRoutes);
 
 app.get('/', (req, res) => res.send('The Mix.ID backend server is LIVE!'));
+
+// Resolve __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from the frontend/dist folder
+const frontendPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendPath));
+
+// Handle all other routes by serving the index.html file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 const server = app.listen(PORT, HOST, () => logger.info(`Running: http://${HOST}:${PORT}`));
 const io = new Server(server);
